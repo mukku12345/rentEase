@@ -1,8 +1,8 @@
 import './App.css'
-import { RegisterPage } from './Pages/Registerpage'
+import { RegisterPage } from './pages/Registerpage'
 
 function App() {
-<RegisterPage/>
+ return <RegisterPage/>
 }
 
 export default App
