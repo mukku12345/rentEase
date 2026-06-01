@@ -1,41 +1,128 @@
-import { useState } from "react"
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
 
 export const RegisterPage = () => {
-    const [firstname, setFirstame] = useState("");
-    const [lastname, setLastame] = useState("");
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmpassword, setConfirmpassword] = useState("")
-    const handleSubmit = () => {
-        if (firstname === "" || lastname === "" || email === "" || password === "") {
-            alert("Please enter all fields")
-        }
-        else if (password !== confirmpassword) {
-            alert("Password is not matched")
-        }
-        else if (email == "") {
-            alert("Password is not matched")
+  const validateSchema = yup.object({
+    firstName: yup.string().required("First name is required"),
 
-        }
-    }
+    lastName: yup.string().required("Last name is required"),
 
-    return (
-        <div className="">
-            <h2>Register</h2>
-            <form onSubmit={() => { handleSubmit() }}>
-                <input type="text" placeholder="Enter your First name" onChange={(e) => setFirstame(e.target.value)}></input>
+    email: yup
+      .string()
+      .email("Invalid email")
+      .required("Email is required"),
 
-                <input type="text" placeholder="Enter your Last name" onChange={(e) => setLastame(e.target.value)}></input>
+    password: yup
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
 
-                <input type="email" placeholder="Enter your Email" onChange={(e) => setEmail(e.target.value)}></input>
+    ConfirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
 
-                <input type="password" placeholder="Enter Password" onChange={(e) => setPassword(e.target.value)}></input>
+  return (
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-gray-800 p-8 rounded-xl shadow-lg">
+        <h1 className="text-3xl font-bold text-center text-white mb-6">
+          Register
+        </h1>
 
-                <input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmpassword(e.target.value)}></input>
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            ConfirmPassword: "",
+          }}
+          validationSchema={validateSchema}
+          onSubmit={(values) => {
+            console.log(values);
+          }}
+        >
+          <Form className="space-y-4">
+            <div>
+              <Field
+                type="text"
+                name="firstName"
+                placeholder="Enter First Name"
+                className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage
+                name="firstName"
+                component="p"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                <button type="submit">Register</button>
-            </form>
-        </div>)
+            <div>
+              <Field
+                type="text"
+                name="lastName"
+                placeholder="Enter Last Name"
+                className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage
+                name="lastName"
+                component="p"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
+            <div>
+              <Field
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage
+                name="email"
+                component="p"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-}
+            <div>
+              <Field
+                type="password"
+                name="password"
+                placeholder="Enter Password"
+                className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage
+                name="password"
+                component="p"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <div>
+              <Field
+                type="password"
+                name="ConfirmPassword"
+                placeholder="Confirm Password"
+                className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage
+                name="ConfirmPassword"
+                component="p"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
+            >
+              Register
+            </button>
+          </Form>
+        </Formik>
+      </div>
+    </div>
+  );
+};
